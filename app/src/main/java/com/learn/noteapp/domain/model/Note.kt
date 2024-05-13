@@ -26,3 +26,5 @@ data class Note(
         val deleteIconColor: Int = R.color.white
     )
 }
+
+class InvalidNoteException(message: String): Exception(message)

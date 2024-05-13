@@ -1,4 +1,4 @@
-package com.learn.noteapp.data
+package com.learn.noteapp.data.data_source
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -8,7 +8,7 @@ import com.learn.noteapp.domain.model.Note
     entities = [Note::class], version = 1
 )
 abstract class NoteDatabase : RoomDatabase() {
-    abstract fun noteDao(): NoteDao
+    abstract val noteDao: NoteDao
 
     companion object{
         const val DATABASE_NAME = "note_database"
