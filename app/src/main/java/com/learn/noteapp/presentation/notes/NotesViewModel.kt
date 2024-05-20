@@ -59,15 +59,22 @@ class NotesViewModel @Inject constructor(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
             }
+
+            is NotesEvent.SearchItem -> {
+                _state.value = state.value.copy(
+                    searchText = event.searchText
+                )
+                getNotes(state.value.noteOrder, event.searchText)
+            }
         }
     }
 
-    private fun getNotes(noteOrder: NoteOrder) {
+    private fun getNotes(noteOrder: NoteOrder, searchText: String = "") {
         getNotesJob?.cancel()
-        getNotesJob = noteUseCases.getNotes(noteOrder,"").onEach { notes ->
-                _state.value = state.value.copy(
-                    notes = notes, noteOrder = noteOrder
-                )
-            }.launchIn(viewModelScope)
+        getNotesJob = noteUseCases.getNotes(noteOrder, searchText).onEach { notes ->
+            _state.value = state.value.copy(
+                notes = notes, noteOrder = noteOrder
+            )
+        }.launchIn(viewModelScope)
     }
 }

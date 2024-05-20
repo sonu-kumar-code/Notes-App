@@ -15,7 +15,25 @@ data class Note(
 ) {
     companion object {
         val colors = listOf(
-            ColorModel(backgroundColor = R.color.teal_200)
+            ColorModel(backgroundColor = R.color.teal_200),
+            ColorModel(backgroundColor = R.color.red),
+            ColorModel(backgroundColor = R.color.cyan),
+            ColorModel(backgroundColor = R.color.blue),
+            ColorModel(backgroundColor = R.color.dark_blue),
+            ColorModel(backgroundColor = R.color.light_blue),
+            ColorModel(backgroundColor = R.color.purple),
+            ColorModel(backgroundColor = R.color.yellow),
+            ColorModel(backgroundColor = R.color.lime),
+            ColorModel(backgroundColor = R.color.magenta),
+            ColorModel(backgroundColor = R.color.pink),
+            ColorModel(backgroundColor = R.color.silver),
+            ColorModel(backgroundColor = R.color.gray),
+            ColorModel(backgroundColor = R.color.orange),
+            ColorModel(backgroundColor = R.color.brown),
+            ColorModel(backgroundColor = R.color.maroon),
+            ColorModel(backgroundColor = R.color.green),
+            ColorModel(backgroundColor = R.color.olive),
+            ColorModel(backgroundColor = R.color.aquamarine),
         )
     }
 
@@ -27,4 +45,4 @@ data class Note(
     )
 }
 
-class InvalidNoteException(message: String): Exception(message)
+class InvalidNoteException(message: String) : Exception(message)

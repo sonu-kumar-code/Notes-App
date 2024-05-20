@@ -6,17 +6,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -36,9 +37,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.learn.noteapp.R
 import com.learn.noteapp.domain.model.Note
 import com.learn.noteapp.presentation.add_edit_note.components.TransparentHintTextField
 import kotlinx.coroutines.flow.collectLatest
@@ -47,11 +50,10 @@ import kotlinx.coroutines.launch
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddEditNoteScreen(
-    navController: NavController, noteColor: Int, viewModel: AddEditNoteViewModel = hiltViewModel()
+    navController: NavController, viewModel: AddEditNoteViewModel = hiltViewModel()
 ) {
     val resource = LocalContext.current.resources
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
+    val noteState = viewModel.noteState
 
     val scaffoldState = remember {
         SnackbarHostState()
@@ -59,7 +61,7 @@ fun AddEditNoteScreen(
 
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+            Color(resource.getColor(noteState.value.color, resource.newTheme()))
         )
     }
     val scope = rememberCoroutineScope()
@@ -98,8 +100,9 @@ fun AddEditNoteScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(8.dp)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Note.colors.forEach { color ->
                     val colorInt = color.backgroundColor
@@ -109,14 +112,18 @@ fun AddEditNoteScreen(
                         .clip(CircleShape)
                         .background(color = colorResource(id = colorInt))
                         .border(
-                            width = 3.dp, color = if (viewModel.noteColor.value == colorInt) {
+                            width = 3.dp, color = if (noteState.value.color == colorInt) {
                                 Color.Black
                             } else Color.Transparent, shape = CircleShape
                         )
                         .clickable {
                             scope.launch {
                                 noteBackgroundAnimatable.animateTo(
-                                    targetValue = Color(colorInt), animationSpec = tween(
+                                    targetValue = Color(
+                                        resource.getColor(
+                                            colorInt, resource.newTheme()
+                                        )
+                                    ), animationSpec = tween(
                                         durationMillis = 500
                                     )
                                 )
@@ -126,30 +133,24 @@ fun AddEditNoteScreen(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(text = titleState.text,
-                hint = titleState.hint,
+            TransparentHintTextField(
+                text = noteState.value.titleText,
+                hint = stringResource(id = R.string.enter_title),
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredTitle(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeTitleFocus(it))
-                },
-                isHintVisible = titleState.isHintVisible,
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
-            TransparentHintTextField(text = contentState.text,
-                hint = contentState.hint,
+            TransparentHintTextField(
+                text = noteState.value.contentText,
+                hint = stringResource(id = R.string.enter_description),
                 onValueChange = {
                     viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
                 },
-                onFocusChange = {
-                    viewModel.onEvent(AddEditNoteEvent.ChangeContentFocus(it))
-                },
-                isHintVisible = contentState.isHintVisible,
                 textStyle = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxHeight()
+                modifier = Modifier.padding(bottom = 100.dp).weight(1f)
             )
         }
     }
