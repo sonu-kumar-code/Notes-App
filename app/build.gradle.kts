@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.symbol.processing)
     alias(libs.plugins.hilt)
-}
+    alias(libs.plugins.kotlin.serialization)
+    }
 
 android {
     namespace = "com.learn.noteapp"
@@ -78,4 +79,5 @@ dependencies {
 
     implementation(libs.navigation.hilt)
     implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }

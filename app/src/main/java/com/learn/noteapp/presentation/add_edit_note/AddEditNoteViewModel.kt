@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.learn.noteapp.domain.model.InvalidNoteException
 import com.learn.noteapp.domain.model.Note
 import com.learn.noteapp.domain.use_case.NoteUseCases
+import com.learn.noteapp.presentation.AddNoteScreenRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -28,13 +30,15 @@ class AddEditNoteViewModel @Inject constructor(
     private var currentNoteId: Int? = null
 
     init {
-        savedStateHandle.get<Int>("noteId")?.let { noteId ->
-            if (noteId != -1) {
+        savedStateHandle.toRoute<AddNoteScreenRoute>().let { noteId ->
+            if (noteId.noteId != -1) {
                 viewModelScope.launch {
-                    noteUseCases.getNote(noteId)?.also { note ->
+                    noteUseCases.getNote(noteId.noteId)?.also { note ->
                         currentNoteId = note.id
                         _noteState.value = noteState.value.copy(
-                            titleText = note.title, contentText = note.content, color = note.color
+                            titleText = note.title,
+                            contentText = note.content,
+                            color = note.color
                         )
                     }
                 }

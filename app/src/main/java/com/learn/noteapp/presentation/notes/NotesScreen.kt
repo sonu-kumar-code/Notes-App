@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.learn.noteapp.R
+import com.learn.noteapp.presentation.AddNoteScreenRoute
 import com.learn.noteapp.presentation.add_edit_note.components.TransparentHintTextField
 import com.learn.noteapp.presentation.notes.components.NoteItem
 import com.learn.noteapp.presentation.notes.components.OrderSection
@@ -45,7 +46,8 @@ import kotlinx.coroutines.launch
 @ExperimentalAnimationApi
 @Composable
 fun NotesScreen(
-    navController: NavController, viewModel: NotesViewModel = hiltViewModel()
+    navController: NavController,
+    viewModel: NotesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
     val scaffoldState = remember { SnackbarHostState() }
@@ -54,7 +56,7 @@ fun NotesScreen(
     Scaffold(floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                navController.navigate(Screen.AddEditNoteScreen.route)
+                navController.navigate(AddNoteScreenRoute)
             }, containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
@@ -99,7 +101,7 @@ fun NotesScreen(
                         .fillMaxWidth()
                         .clickable {
                             navController.navigate(
-                                Screen.AddEditNoteScreen.route + "?noteId=${note.id}&noteColor=${note.color}"
+                                AddNoteScreenRoute(note.id)
                             )
                         }, onDeleteClick = {
                         viewModel.onEvent(NotesEvent.DeleteNote(note))

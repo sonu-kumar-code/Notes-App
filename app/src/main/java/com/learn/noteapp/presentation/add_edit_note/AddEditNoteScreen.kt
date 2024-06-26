@@ -47,7 +47,7 @@ import com.learn.noteapp.presentation.add_edit_note.components.TransparentHintTe
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "ResourceType")
 @Composable
 fun AddEditNoteScreen(
     navController: NavController, viewModel: AddEditNoteViewModel = hiltViewModel()
@@ -94,7 +94,13 @@ fun AddEditNoteScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(noteBackgroundAnimatable.value)
+                .background(
+                    color = Color(
+                        resource.getColor(
+                            noteState.value.color, resource.newTheme()
+                        )
+                    )
+                )
                 .padding(16.dp)
         ) {
             Row(
@@ -150,7 +156,9 @@ fun AddEditNoteScreen(
                     viewModel.onEvent(AddEditNoteEvent.EnteredContent(it))
                 },
                 textStyle = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 100.dp).weight(1f)
+                modifier = Modifier
+                    .padding(bottom = 100.dp)
+                    .weight(1f)
             )
         }
     }

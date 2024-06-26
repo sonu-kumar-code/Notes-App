@@ -17,6 +17,7 @@ import com.learn.noteapp.presentation.notes.NotesScreen
 import com.learn.noteapp.presentation.util.Screen
 import com.learn.noteapp.ui.theme.NoteAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.Serializable
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,18 +32,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     NavHost(
-                        navController = navController, startDestination = Screen.NotesScreen.route
+                        navController = navController, startDestination = NoteScreenRoute
                     ) {
-                        composable(route = Screen.NotesScreen.route) {
+                        composable<NoteScreenRoute> {
                             NotesScreen(navController = navController)
                         }
-                        composable(route = Screen.AddEditNoteScreen.route + "?noteId={noteId}",
-                            arguments = listOf(navArgument(
-                                name = "noteId"
-                            ) {
-                                type = NavType.IntType
-                                defaultValue = -1
-                            })) {
+                        composable<AddNoteScreenRoute> {
                             AddEditNoteScreen(
                                 navController = navController
                             )
@@ -53,3 +48,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+@Serializable
+object NoteScreenRoute
+
+@Serializable
+class AddNoteScreenRoute(
+    val noteId: Int
+)
+
