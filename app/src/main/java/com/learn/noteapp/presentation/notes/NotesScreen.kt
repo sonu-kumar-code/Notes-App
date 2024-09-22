@@ -56,7 +56,7 @@ fun NotesScreen(
     Scaffold(floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                navController.navigate(AddNoteScreenRoute)
+                navController.navigate(AddNoteScreenRoute(noteId = null))
             }, containerColor = MaterialTheme.colorScheme.primary
         ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")

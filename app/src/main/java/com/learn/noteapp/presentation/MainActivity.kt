@@ -54,6 +54,6 @@ object NoteScreenRoute
 
 @Serializable
 class AddNoteScreenRoute(
-    val noteId: Int
+    val noteId: Int?
 )
 

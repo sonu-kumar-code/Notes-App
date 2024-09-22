@@ -31,7 +31,7 @@ class AddEditNoteViewModel @Inject constructor(
 
     init {
         savedStateHandle.toRoute<AddNoteScreenRoute>().let { noteId ->
-            if (noteId.noteId != -1) {
+            noteId.noteId?.let {
                 viewModelScope.launch {
                     noteUseCases.getNote(noteId.noteId)?.also { note ->
                         currentNoteId = note.id
